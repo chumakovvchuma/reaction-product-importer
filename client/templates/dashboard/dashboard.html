@@ -1,0 +1,15 @@
+<template name='dashboardProductImporter'>
+  <div class='container'>
+    <h1 class='text-center'>Product Importer</h1>
+    <p>Product Importer allows you to bulk upload products from a CSV file. Each CSV requires a column called ProductId that groups variants together. Then you make the second level variant whatever you want and the third variant whatever you want. You can also control the mapping from one column to a corresponding DB field, or name your columns to correspond</p>
+    <div class='row text-center'>
+      <form id="import-products-csv-form" class="form-inline">
+        <h4>Import products from CSV file.</h4>
+        <label for="csvImportProductsFile">CSV File</label>
+        <input type="file" accept=".csv" name="csvImportProductsFile" id="csvImportProductsFile" class="form-control btn" />
+        <button type="submit" class="btn btn-default form-control">Import CSV File</button>
+      </form>
+
+    </div>
+  </div>
+</template>
