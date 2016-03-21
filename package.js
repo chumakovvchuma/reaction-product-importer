@@ -25,4 +25,8 @@ Package.onUse(function (api) {
     'client/templates/settings/settings.html',
     'client/templates/settings/settings.js'
   ], 'client');
+
+  api.addFiles([
+    'server/methods/productImporter.js'
+  ], 'server');
 });

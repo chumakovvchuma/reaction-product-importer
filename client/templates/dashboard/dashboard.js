@@ -1,3 +1,7 @@
+Template.dashboardProductImporter.onRendered(function () {
+  Session.setDefault('importingProducts', false);
+});
+
 Template.dashboardProductImporter.helpers({
   sampleTemplate: function () {
     let data = [{
@@ -15,6 +19,12 @@ Template.dashboardProductImporter.helpers({
       hastags: ''
     }];
     return Papa.unparse(data);
+  },
+  importingProducts: function () {
+    return Session.get('importingProducts');
+  },
+  importSize: function () {
+    return Session.get('importSize');
   }
 });
 
@@ -24,7 +34,11 @@ Template.dashboardProductImporter.events({
     Papa.parse(event.target.csvImportProductsFile.files[0], {
       header: true,
       complete: function (results) {
-        debugger;
+        if (results && results.data) {
+          Session.set('importSize', _.size(results.data));
+          Session.set('importingProducts', true)
+          Meteor.call('productImporter/importProducts', results.data);
+        }
       }
     });
   },
