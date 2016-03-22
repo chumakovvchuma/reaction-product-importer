@@ -47,6 +47,7 @@ Template.dashboardProductImporter.events({
     let data = [{
       productId: '1',
       productTitle: 'Basic Reaction Product',
+      pageTitle: 'This is a basic product. You can do a lot with it.',
       vendor: 'Example Manufacturer',
       handle: 'example-product',
       variantTitle: 'Basic Example Variant',
@@ -56,7 +57,8 @@ Template.dashboardProductImporter.events({
       qty: '19',
       weight: '35',
       taxable: 'true',
-      hastags: ''
+      hastags: '',
+      description: 'Sign in as administrator to edit.\nYou can clone this product from the product grid.'
     }];
     let unparse = Papa.unparse(data);
     let csvData = new Blob([unparse], {type: 'text/csv;charset=utf-8;'});
