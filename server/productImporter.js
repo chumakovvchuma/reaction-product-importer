@@ -48,8 +48,9 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.shopId = ReactionCore.getShopId();
   prod.title = baseProduct.productTitle;
   prod.vendor = baseProduct.vendor;
-  prod.pageTitle = baseProduct.productTitle;
-  prod.handle = baseProduct.handle;
+  prod.pageTitle = baseProduct.pageTitle;
+  prod.handle = baseProduct.handle.toLowerCase().trim();
+  prod.handle = prod.handle.replace(/\s/, '-');
   prod.isVisible = false;
   prod.description = baseProduct.description;
   prod.price = {};
@@ -84,9 +85,45 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   prod.ancestors = ancestors;
   prod.isVisible = false;
   prod.type = 'variant';
-  prod.title = baseVariant.title;
+  prod.title = baseVariant.variantTitle;
   prod.price = baseVariant.price;
-  prod.qty = inventory;
+  prod.inventoryQuantity = inventory;
+  prod.weight = parseInt(baseVariant.weight, 10);
+  prod.shopId = ReactionCore.getShopId();
+  prod.taxable = baseVariant.taxable.toLowerCase() === 'true';
   let existingVariant = this.existingProduct(prod);
+  if (existingVariant) {
+    ReactionCore.Log.warn('Found product = ' + existingVariant._id);
+    ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
+    return existingVariant._id;
+  }
+  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: 'variant'}});
+  ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
+  return reactionVariantId;
+};
+
+ProductImporter.createVariant = function (variant, ancestors) {
+  check(variant, Object);
+  check(ancestors, [String]);
+  let prod = {};
+  prod.ancestors = ancestors;
+  prod.isVisible = false;
+  prod.type = 'variant';
+  prod.title = variant.title;
+  prod.optionTitle = variant.optionTitle;
+  prod.price = variant.price;
+  prod.inventoryQuantity = parseInt(variant.qty, 10);
+  prod.weight = parseInt(variant.weight, 10);
+  prod.shopId = ReactionCore.getShopId();
+  prod.taxable = variant.taxable.toLowerCase() === 'true';
+  let existingVariant = this.existingProduct(prod);
+  if (existingVariant) {
+    ReactionCore.Log.warn('Found product = ' + existingVariant._id);
+    ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
+    return existingVariant._id;
+  }
+  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: 'variant'}});
+  ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
+  return reactionVariantId;
 };
 
