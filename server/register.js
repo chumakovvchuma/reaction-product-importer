@@ -3,6 +3,13 @@ ReactionCore.registerPackage({
   name: 'reaction-product-importer',
   icon: 'fa fa-cloud-upload',
   autoEnable: false,
+  settings: {
+    customFields: {
+      topProduct: [],
+      midVariant: [],
+      variant: []
+    }
+  },
   registry: [
     {
       provides: 'dashboard',

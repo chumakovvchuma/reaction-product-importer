@@ -84,5 +84,50 @@
       <h2>Download Basic CSV Template</h2>
       <a href='#' class='btn btn btn-default downloadSample'>Download</a>
     </div>
+    <div class='row'>
+      <h2 class='text-center'>Custom Product Fields</h2>
+      <p>Product Importer supports the importing of your custom fields, you just need to help us map them out. You need to tell us what the column name is, what the field name is on your products, what type of value you are inserting and finally where to put this (top level product, grouping variant or bottom variant)</p>
+      {{> customFields}}
+    </div>
+  </div>
+</template>
+
+<template name='selectOptions'>
+  <select class="form-control">
+    <option value='string'>String</option>
+    <option value='number'>Number</option>
+    <option value='boolean'>Boolean</option>
+  </select>
+</template>
+
+<template name='customFields'>
+  <div class='row topProduct'>
+    <form class='' id='customFieldsForm'>
+      <div class="form-group">
+        <label for="columnName">CSV Column Name</label>
+        <input required name='columnName' type="text" class="form-control" id="columnName" placeholder="Additional Column Name">
+      </div>
+      <div class="form-group">
+        <label for="productField">Product Collection Field's Name</label>
+        <input required name="productField" type="text" class="form-control" id="productField" placeholder="Products Collection Field's Name">
+      </div>
+      <div class="form-group">
+        <label for='typeSelector'>Type</label>
+        <select required name='typeSelector' id='typeSelector' class="form-control">
+          <option value='string'>String</option>
+          <option value='number'>Number</option>
+          <option value='boolean'>Boolean</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for='productSelector'>Type</label>
+        <select  required name='productSelector' id='productSelector' class="form-control">
+          <option value='topProduct'>Top Level Product</option>
+          <option value='midVariant'>Grouping Variant</option>
+          <option value='variant'>Variant</option>
+        </select>
+      </div>
+      <button type="submit" class="customFieldsForm btn btn-default">Submit</button>
+    </form>
   </div>
 </template>
