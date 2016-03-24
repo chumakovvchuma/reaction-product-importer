@@ -16,7 +16,7 @@ Package.onUse(function (api) {
   api.use('harrison:papa-parse@1.1.1');
   api.use('reactioncommerce:reaction-schemas');
   api.use('reactioncommerce:reaction-collections');
-
+  api.addFiles('lib/productImporter.js');
   api.addFiles('server/register.js', 'server');
 
   api.addFiles([
@@ -25,4 +25,9 @@ Package.onUse(function (api) {
     'client/templates/settings/settings.html',
     'client/templates/settings/settings.js'
   ], 'client');
+
+  api.addFiles([
+    'server/methods/productImporter.js',
+    'server/productImporter.js'
+  ], 'server');
 });
