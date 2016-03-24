@@ -17,6 +17,38 @@ ProductImporter.existingProduct = function (product, type = 'variant') {
   });
 };
 
+ProductImporter.anyCustomFields = function (level) {
+  check(level, String);
+  let validLevels = ['topProduct', 'midVariant', 'variant'];
+  if (!_.contains(validLevels, level)) {
+    ReactionCore.Log.warn('Customized Import does not match level');
+    return false;
+  }
+  let productImporter = ReactionCore.Collections.Packages.findOne({
+    name: 'reaction-product-importer',
+    shopId: ReactionCore.getShopId()
+  });
+  if (productImporter) {
+    return productImporter.settings.customFields[level].length >= 1;
+  }
+};
+ProductImporter.customFields = function (level) {
+  check(level, String);
+  let validLevels = ['topProduct', 'midVariant', 'variant'];
+
+  if (!_.contains(validLevels, level)) {
+    ReactionCore.Log.warn('Customized Import does not match level');
+    return false;
+  }
+  let productImporter = ReactionCore.Collections.Packages.findOne({
+    name: 'reaction-product-importer',
+    shopId: ReactionCore.getShopId()
+  });
+  if (productImporter && productImporter.settings && productImporter.settings.customFields) {
+    return productImporter.settings.customFields[level];
+  }
+};
+
 ProductImporter.groupBy = function (productList, groupIdentifier) {
   check(productList, [Object]);
   check(groupIdentifier, String);
@@ -57,6 +89,12 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.price.max = maxPrice;
   prod.price.min = minPrice;
   prod.price.range = minPrice + '-' + maxPrice;
+  if (this.anyCustomFields('topProduct')) {
+    let customFields = this.customFields('topProduct');
+    _.each(customFields, function (customField) {
+      prod[customField.productFieldName] = baseProduct[customField.csvColumnName]
+    });
+  }
   let existingProduct = this.existingProduct(prod, 'simple');
   if (existingProduct) {
     ReactionCore.Log.warn('Found product = ' + existingProduct._id);
