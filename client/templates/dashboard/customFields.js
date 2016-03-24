@@ -1,3 +1,32 @@
+function getProductImporterPackage() {
+  return ReactionCore.Collections.Packages.findOne({
+    name: 'reaction-product-importer',
+    shopId: ReactionCore.getShopId()
+  });
+}
+Template.customFields.helpers({
+  anyCustomFields: function () {
+    const productImporter = getProductImporterPackage();
+    return _.some(productImporter.settings.customFields, function (level) {
+      return level.length > 0;
+    });
+  },
+  customTopProducts: function () {
+    const productImporter = getProductImporterPackage();
+    return productImporter.settings.customFields.topProduct;
+  },
+  customMidVariant: function () {
+    const productImporter = getProductImporterPackage();
+    return productImporter.settings.customFields.midVariant;
+  },
+  customVariant: function () {
+    const productImporter = getProductImporterPackage();
+    return productImporter.settings.customFields.variant;
+  }
+
+
+});
+
 Template.customFields.events({
   'submit #customFieldsForm': function () {
     event.preventDefault();
