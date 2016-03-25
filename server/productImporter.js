@@ -129,8 +129,8 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   prod.weight = parseInt(baseVariant.weight, 10);
   prod.shopId = ReactionCore.getShopId();
   prod.taxable = baseVariant.taxable.toLowerCase() === 'true';
-  if (this.anyCustomFields('topProduct')) {
-    let customFields = this.customFields('topProduct');
+  if (this.anyCustomFields('midVariant')) {
+    let customFields = this.customFields('midVariant');
     _.each(customFields, function (customField) {
       prod[customField.productFieldName] = baseVariant[customField.csvColumnName]
     });
