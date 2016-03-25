@@ -57,6 +57,19 @@ ProductImporter.groupBy = function (productList, groupIdentifier) {
   });
 };
 
+ProductImporter.parseByType = function (value, valueType) {
+  check(value, String);
+  check(valueType, String);
+  switch (valueType) {
+  case 'number':
+    return parseInt(value, 10);
+  case 'boolean':
+    return JSON.parse(value.toLowerCase());
+  default:
+    return value;
+  }
+};
+
 ProductImporter.createTopLevelProduct = function (product) {
   check(product, [Object]);
   let baseProduct = product[0];
@@ -92,7 +105,8 @@ ProductImporter.createTopLevelProduct = function (product) {
   if (this.anyCustomFields('topProduct')) {
     let customFields = this.customFields('topProduct');
     _.each(customFields, function (customField) {
-      prod[customField.productFieldName] = baseProduct[customField.csvColumnName]
+      let result = ProductImporter.parseByType(baseProduct[customField.csvColumnName], customField.valueType);
+      prod[customField.productFieldName] = result;
     });
   }
   let existingProduct = this.existingProduct(prod, 'simple');
@@ -132,7 +146,8 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   if (this.anyCustomFields('midVariant')) {
     let customFields = this.customFields('midVariant');
     _.each(customFields, function (customField) {
-      prod[customField.productFieldName] = baseVariant[customField.csvColumnName]
+      let result = ProductImporter.parseByType(baseVariant[customField.csvColumnName], customField.valueType);
+      prod[customField.productFieldName] = result;
     });
   }
   let existingVariant = this.existingProduct(prod);
@@ -163,7 +178,8 @@ ProductImporter.createVariant = function (variant, ancestors) {
   if (this.anyCustomFields('variant')) {
     let customFields = this.customFields('variant');
     _.each(customFields, function (customField) {
-      prod[customField.productFieldName] = variant[customField.csvColumnName]
+      let result = ProductImporter.parseByType(variant[customField.csvColumnName], customField.valueType);
+      prod[customField.productFieldName] = result;
     });
   }
   let existingVariant = this.existingProduct(prod);
