@@ -62,7 +62,7 @@ ProductImporter.parseByType = function (value, valueType) {
   check(valueType, String);
   switch (valueType) {
   case 'number':
-    return parseInt(value, 10);
+    return parseFloat(value, 10);
   case 'boolean':
     return JSON.parse(value.toLowerCase());
   default:
