@@ -129,6 +129,12 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   prod.weight = parseInt(baseVariant.weight, 10);
   prod.shopId = ReactionCore.getShopId();
   prod.taxable = baseVariant.taxable.toLowerCase() === 'true';
+  if (this.anyCustomFields('topProduct')) {
+    let customFields = this.customFields('topProduct');
+    _.each(customFields, function (customField) {
+      prod[customField.productFieldName] = baseVariant[customField.csvColumnName]
+    });
+  }
   let existingVariant = this.existingProduct(prod);
   if (existingVariant) {
     ReactionCore.Log.warn('Found product = ' + existingVariant._id);
@@ -154,6 +160,12 @@ ProductImporter.createVariant = function (variant, ancestors) {
   prod.weight = parseInt(variant.weight, 10);
   prod.shopId = ReactionCore.getShopId();
   prod.taxable = variant.taxable.toLowerCase() === 'true';
+  if (this.anyCustomFields('variant')) {
+    let customFields = this.customFields('variant');
+    _.each(customFields, function (customField) {
+      prod[customField.productFieldName] = variant[customField.csvColumnName]
+    });
+  }
   let existingVariant = this.existingProduct(prod);
   if (existingVariant) {
     ReactionCore.Log.warn('Found product = ' + existingVariant._id);
