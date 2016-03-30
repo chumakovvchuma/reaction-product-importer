@@ -24,7 +24,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#' id='{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#' class='remove' id='topProducts-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
         {{#each customMidVariant}}
@@ -33,7 +33,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#' id='{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#'class='remove' id='midVariants-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
         {{#each customVariant}}
@@ -42,7 +42,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#' id='{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#' class='remove' id='variants-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
       </tbody>
@@ -69,18 +69,20 @@
           <option value='object'>Object</option>
         </select>
       </div>
-      {{#if ifArray}}
+      {{#if arrayOrObject}}
         <div class="form-group">
-          <label for="arraySpacer">Array Value Delimiter Symbol</label>
-          <input required name='arraySpacer' type="text" class="form-control"  placeholder="Symbol that delimites (separates) array values">
+          <label for="delimiterSymbol">Delimiter Symbol</label>
+          <input required name='delimiterSymbol' type="text" class="form-control"  placeholder="Symbol that delimites (separates)values">
         </div>
         <div class="form-group">
-          <label for='arrayTypeSelector'>Array Value Type</label>
-          <select required name='arrayTypeSelector' class="form-control">
+          <label for='arrayTypeSelector'>Array/Object Value Type</label>
+          <select required name='optionTypeSelector' class="form-control">
             <option value='string'>String</option>
             <option value='number'>Number</option>
             <option value='boolean'>Boolean</option>
-            <option value='object'>Object</option>
+            {{#if ifArray}}
+              <!-- <option value='object'>Object</option> -->
+            {{/if}}
           </select>
         </div>
       {{/if}}

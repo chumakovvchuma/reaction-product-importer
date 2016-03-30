@@ -79,11 +79,22 @@ ProductImporter.parseByType = function (value, customField) {
   case 'boolean':
     return JSON.parse(value.toLowerCase());
   case 'array':
-    const arrayValues = value.split(customField.options.arraySpacer);
+    const arrayValues = value.split(customField.options.delimiter);
     const cleaned = _.map(arrayValues, function (arrayValue) {
-      return ProductImporter.parseBasicType(arrayValue.trim(), customField.options.arrayTypeSelector);
+      return ProductImporter.parseBasicType(arrayValue.trim(), customField.options.typeSelector);
     });
     return cleaned;
+  case 'object':
+    const objectValues = value.split(customField.options.delimiter);
+    let customObject = {};
+    _.each(objectValues, function (objectValue) {
+      let keyValues = objectValue.split('=');
+      let key = keyValues[0].trim();
+      let v = keyValues[1].trim();
+
+      customObject[key] = ProductImporter.parseBasicType(v, customField.options.typeSelector);
+    });
+    return customObject;
   default:
     return value;
   }

@@ -7,6 +7,7 @@ function getProductImporterPackage() {
 
 Template.customFields.onRendered(function () {
   Session.setDefault('ifArray', false);
+  Session.setDefault('ifObject', false);
 });
 
 Template.customFields.helpers({
@@ -30,6 +31,12 @@ Template.customFields.helpers({
   },
   ifArray: function () {
     return Session.get('ifArray');
+  },
+  ifObject: function () {
+    return Session.get('ifObject');
+  },
+  arrayOrObject: function () {
+    return Session.get('ifArray') || Session.get('ifObject');
   }
 });
 
@@ -41,10 +48,10 @@ Template.customFields.events({
     customField.productFieldName = event.target.productField.value.trim();
     customField.valueType = event.target.typeSelector.value;
     const productSelector = event.target.productSelector.value;
-    if (customField.valueType === 'array') {
+    if (customField.valueType === 'array' || customField.valueType === 'object') {
       customField.options = {};
-      customField.options.arraySpacer = event.target.arraySpacer.value;
-      customField.options.arrayTypeSelector = event.target.arrayTypeSelector.value;
+      customField.options.delimiter = event.target.delimiterSymbol.value;
+      customField.options.typeSelector = event.target.optionTypeSelector.value;
     }
     let columnNameWhiteSpace = customField.csvColumnName.search(/\s/g);
     let productFieldNameWhiteSpace = customField.productFieldName.search(/\s/g);
@@ -59,14 +66,21 @@ Template.customFields.events({
     }
     event.target.columnName.value = '';
     event.target.productField.value = '';
+    Session.set('ifArray', false);
+    Session.set('ifObject', false);
   },
   'change form #typeSelector': function () {
     event.preventDefault();
     let selectedType = event.target.value;
     if (selectedType === 'array') {
       Session.set('ifArray', true);
+      Session.set('ifObject', false);
+    } else if (selectedType === 'object') {
+      Session.set('ifArray', false);
+      Session.set('ifObject', true);
     } else {
       Session.set('ifArray', false);
+      Session.set('ifObject', false);
     }
   }
 });
