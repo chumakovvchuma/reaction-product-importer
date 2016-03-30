@@ -60,15 +60,32 @@
         <input required name="productField" type="text" class="form-control" id="productField" placeholder="Products Collection Field's Name">
       </div>
       <div class="form-group">
-        <label for='typeSelector'>Type</label>
+        <label for='typeSelector'>Value Type</label>
         <select required name='typeSelector' id='typeSelector' class="form-control">
           <option value='string'>String</option>
           <option value='number'>Number</option>
           <option value='boolean'>Boolean</option>
+          <option value='array'>Array</option>
+          <option value='object'>Object</option>
         </select>
       </div>
+      {{#if ifArray}}
+        <div class="form-group">
+          <label for="arraySpacer">Array Value Delimiter Symbol</label>
+          <input required name='arraySpacer' type="text" class="form-control"  placeholder="Symbol that delimites (separates) array values">
+        </div>
+        <div class="form-group">
+          <label for='arrayTypeSelector'>Array Value Type</label>
+          <select required name='arrayTypeSelector' class="form-control">
+            <option value='string'>String</option>
+            <option value='number'>Number</option>
+            <option value='boolean'>Boolean</option>
+            <option value='object'>Object</option>
+          </select>
+        </div>
+      {{/if}}
       <div class="form-group">
-        <label for='productSelector'>Type</label>
+        <label for='productSelector'>Product/Variant Type</label>
         <select  required name='productSelector' id='productSelector' class="form-control">
           <option value='topProduct'>Top Level Product</option>
           <option value='midVariant'>Grouping Variant</option>

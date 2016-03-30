@@ -4,6 +4,11 @@ function getProductImporterPackage() {
     shopId: ReactionCore.getShopId()
   });
 }
+
+Template.customFields.onRendered(function () {
+  Session.setDefault('ifArray', false);
+});
+
 Template.customFields.helpers({
   anyCustomFields: function () {
     const productImporter = getProductImporterPackage();
@@ -22,9 +27,10 @@ Template.customFields.helpers({
   customVariant: function () {
     const productImporter = getProductImporterPackage();
     return productImporter.settings.customFields.variant;
+  },
+  ifArray: function () {
+    return Session.get('ifArray');
   }
-
-
 });
 
 Template.customFields.events({
@@ -35,6 +41,11 @@ Template.customFields.events({
     customField.productFieldName = event.target.productField.value.trim();
     customField.valueType = event.target.typeSelector.value;
     const productSelector = event.target.productSelector.value;
+    if (customField.valueType === 'array') {
+      customField.options = {};
+      customField.options.arraySpacer = event.target.arraySpacer.value;
+      customField.options.arrayTypeSelector = event.target.arrayTypeSelector.value;
+    }
     let columnNameWhiteSpace = customField.csvColumnName.search(/\s/g);
     let productFieldNameWhiteSpace = customField.productFieldName.search(/\s/g);
     let noWhiteSpace = columnNameWhiteSpace + productFieldNameWhiteSpace === -2;
@@ -48,5 +59,14 @@ Template.customFields.events({
     }
     event.target.columnName.value = '';
     event.target.productField.value = '';
+  },
+  'change form #typeSelector': function () {
+    event.preventDefault();
+    let selectedType = event.target.value;
+    if (selectedType === 'array') {
+      Session.set('ifArray', true);
+    } else {
+      Session.set('ifArray', false);
+    }
   }
 });

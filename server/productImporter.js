@@ -1,7 +1,7 @@
 ProductImporter.existingProduct = function (product, type = 'variant') {
   check(product, Object);
   check(type, String);
-  if (type === 'simple') {
+  if (type !== 'variant') {
     return ReactionCore.Collections.Products.findOne({
       title: product.title,
       vendor: product.vendor,
@@ -57,7 +57,7 @@ ProductImporter.groupBy = function (productList, groupIdentifier) {
   });
 };
 
-ProductImporter.parseByType = function (value, valueType) {
+ProductImporter.parseBasicType = function (value, valueType) {
   check(value, String);
   check(valueType, String);
   switch (valueType) {
@@ -65,6 +65,25 @@ ProductImporter.parseByType = function (value, valueType) {
     return parseFloat(value, 10);
   case 'boolean':
     return JSON.parse(value.toLowerCase());
+  default:
+    return value;
+  }
+};
+
+ProductImporter.parseByType = function (value, customField) {
+  check(value, String);
+  check(customField, Object);
+  switch (customField.valueType) {
+  case 'number':
+    return parseFloat(value, 10);
+  case 'boolean':
+    return JSON.parse(value.toLowerCase());
+  case 'array':
+    const arrayValues = value.split(customField.options.arraySpacer);
+    const cleaned = _.map(arrayValues, function (arrayValue) {
+      return ProductImporter.parseBasicType(arrayValue.trim(), customField.options.arrayTypeSelector);
+    });
+    return cleaned;
   default:
     return value;
   }
@@ -98,6 +117,7 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.handle = prod.handle.replace(/\s/, '-');
   prod.isVisible = false;
   prod.description = baseProduct.description;
+  prod.type = baseProduct.topProductType || 'simple';
   prod.price = {};
   prod.price.max = maxPrice;
   prod.price.min = minPrice;
@@ -105,17 +125,17 @@ ProductImporter.createTopLevelProduct = function (product) {
   if (this.anyCustomFields('topProduct')) {
     let customFields = this.customFields('topProduct');
     _.each(customFields, function (customField) {
-      let result = ProductImporter.parseByType(baseProduct[customField.csvColumnName], customField.valueType);
+      let result = ProductImporter.parseByType(baseProduct[customField.csvColumnName], customField);
       prod[customField.productFieldName] = result;
     });
   }
-  let existingProduct = this.existingProduct(prod, 'simple');
+  let existingProduct = this.existingProduct(prod, prod.type);
   if (existingProduct) {
     ReactionCore.Log.warn('Found product = ' + existingProduct._id);
     ReactionCore.Log.warn(existingProduct.vendor + ' ' + existingProduct.title + ' has already been added.');
     return existingProduct._id;
   }
-  let reactionProductId = ReactionCore.Collections.Products.insert(prod, {selector: {type: 'simple'}});
+  let reactionProductId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
   ReactionCore.Log.info(prod.vendor + ' ' + prod.title + ' was successfully added to Products.');
   return reactionProductId;
 };
@@ -136,7 +156,7 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   let prod = {};
   prod.ancestors = ancestors;
   prod.isVisible = false;
-  prod.type = 'variant';
+  prod.type = baseVariant.variantType || 'variant';
   prod.title = baseVariant.variantTitle;
   prod.price = baseVariant.price;
   prod.inventoryQuantity = inventory;
@@ -146,17 +166,17 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   if (this.anyCustomFields('midVariant')) {
     let customFields = this.customFields('midVariant');
     _.each(customFields, function (customField) {
-      let result = ProductImporter.parseByType(baseVariant[customField.csvColumnName], customField.valueType);
+      let result = ProductImporter.parseByType(baseVariant[customField.csvColumnName], customField);
       prod[customField.productFieldName] = result;
     });
   }
-  let existingVariant = this.existingProduct(prod);
+  let existingVariant = this.existingProduct(prod, prod.type);
   if (existingVariant) {
     ReactionCore.Log.warn('Found product = ' + existingVariant._id);
     ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
     return existingVariant._id;
   }
-  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: 'variant'}});
+  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
   ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
   return reactionVariantId;
 };
@@ -167,7 +187,7 @@ ProductImporter.createVariant = function (variant, ancestors) {
   let prod = {};
   prod.ancestors = ancestors;
   prod.isVisible = false;
-  prod.type = 'variant';
+  prod.type = variant.variantType || 'variant';
   prod.title = variant.title;
   prod.optionTitle = variant.optionTitle;
   prod.price = variant.price;
@@ -178,17 +198,17 @@ ProductImporter.createVariant = function (variant, ancestors) {
   if (this.anyCustomFields('variant')) {
     let customFields = this.customFields('variant');
     _.each(customFields, function (customField) {
-      let result = ProductImporter.parseByType(variant[customField.csvColumnName], customField.valueType);
+      let result = ProductImporter.parseByType(variant[customField.csvColumnName], customField);
       prod[customField.productFieldName] = result;
     });
   }
-  let existingVariant = this.existingProduct(prod);
+  let existingVariant = this.existingProduct(prod, prod.type);
   if (existingVariant) {
     ReactionCore.Log.warn('Found product = ' + existingVariant._id);
     ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
     return existingVariant._id;
   }
-  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: 'variant'}});
+  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
   ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
   return reactionVariantId;
 };
