@@ -10,6 +10,16 @@
         <button type="submit" class="btn btn-default form-control">Import CSV File</button>
       </form>
     </div>
+    <div>
+      <h4>Special Syntaxes</h4>
+      <ol>
+        <li><strong>top level</strong> - there are certain fields that only apply to top level products (topProdctType, pageTitle, handle, hastags, metafields, description) these <strong>need</strong> to be on the first of each product but can be filled out for each item. </li>
+        <li><strong>hashtags</strong> - each hashtag need to be separated by a <strong>,</strong></li>
+        <li><strong>metafields</strong> - each key value pair need to be separated by <strong>,</strong> and each key needs to be separated from value by <strong>=</strong></li>
+        <li><strong>Custom Arrays</strong> - can be split by whatever sybmol you enter into the delimiting field</li>
+        <li><strong>Custom Objects</strong> - can be delimited by any field but key values must be separated by <strong>=</strong></li>
+      </ol>
+    </div>
     {{#if importingProducts}}
       <div class='row'>
         <br>
@@ -23,8 +33,10 @@
         </div>
       </div>
     {{/if}}
+  </div>
+  <div class='container-fluid'>
     <div class='table-responsive row'>
-      <h2>CSV Example  For Basic Template</h2>
+      <h2 class='text-center'>CSV Example  For Basic Template</h2>
         <table class="table table-bordered table-hover ">
           <thead>
             <tr>
@@ -43,6 +55,7 @@
               <th>weight</th>
               <th>taxable</th>
               <th>hastags</th>
+              <th>metafields</th>
               <th>description</th>
             </tr>
           </thead>
@@ -62,7 +75,8 @@
               <td>19</td>
               <td>35</td>
               <td>true</td>
-              <td>Hashtags, Womens, Red</td>
+              <td>Womens, Red</td>
+              <td>Material=Cotten, Quality=Excellent</td>
               <td>Sign in as administrator to edit.\nYou can clone this product from the product grid.</td>
             </tr>
             <tr>
@@ -82,13 +96,16 @@
               <td>true</td>
               <td class="warning"></td>
               <td class="warning"></td>
+              <td class="warning"></td>
             </tr>
           </tbody>
         </table>
     </div>
-    <div class='row '>
-      <h2>Download Basic CSV Template</h2>
-      <a href='#' class='btn btn btn-default downloadSample'>Download</a>
+  </div>
+  <div class='container'>
+    <div class='row text-center'>
+      <h2 >Download Basic CSV Template</h2>
+      <a href='#' class='btn btn btn-lg btn-default downloadSample'>Download</a>
     </div>
     {{> customFields}}
   </div>

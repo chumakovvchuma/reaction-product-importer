@@ -57,7 +57,7 @@ ProductImporter.groupBy = function (productList, groupIdentifier) {
   });
 };
 
-ProductImporter.parseBasicType = function (value, valueType) {
+ProductImporter.parseBasicType = function (value, valueType = 'string') {
   check(value, String);
   check(valueType, String);
   switch (valueType) {
@@ -91,7 +91,6 @@ ProductImporter.parseByType = function (value, customField) {
       let keyValues = objectValue.split('=');
       let key = keyValues[0].trim();
       let v = keyValues[1].trim();
-
       customObject[key] = ProductImporter.parseBasicType(v, customField.options.typeSelector);
     });
     return customObject;
@@ -133,6 +132,19 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.price.max = maxPrice;
   prod.price.min = minPrice;
   prod.price.range = minPrice + '-' + maxPrice;
+  if (baseProduct.metafields) {
+    let delimited = baseProduct.metafields.split(',');
+    prod.metafields = [];
+    _.each(delimited, function (objectValue) {
+      let metafield = {};
+      let keyValues = objectValue.split('=');
+      let key = keyValues[0].trim();
+      let v = keyValues[1].trim();
+      metafield.key = key;
+      metafield.value = v;
+      prod.metafields.push(metafield);
+    });
+  }
   if (this.anyCustomFields('topProduct')) {
     let customFields = this.customFields('topProduct');
     _.each(customFields, function (customField) {

@@ -3,7 +3,6 @@ Meteor.methods({
     check(productsList, [Object]);
     //  group each Product by Product ID
     let productsById = ProductImporter.groupBy(productsList, 'productId');
-
     _.each(productsById, function (product) {
       let productId = ProductImporter.createTopLevelProduct(product);
       let ancestors = [productId];
@@ -17,7 +16,6 @@ Meteor.methods({
           ProductImporter.createVariant(variant, variantAncestors);
         });
       });
-
     });
   },
   'productImporter/addCustomField': function (productSelector, customField) {
