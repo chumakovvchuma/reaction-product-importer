@@ -17,6 +17,7 @@ Meteor.methods({
           ProductImporter.createVariant(variant, variantAncestors);
         });
       });
+
     });
   },
   'productImporter/addCustomField': function (productSelector, customField) {

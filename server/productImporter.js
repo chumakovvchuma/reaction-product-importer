@@ -147,6 +147,10 @@ ProductImporter.createTopLevelProduct = function (product) {
     return existingProduct._id;
   }
   let reactionProductId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
+  let hastags = baseProduct.hastags.split(',');
+  _.each(hastags, function (hashtag) {
+    Meteor.call('products/updateProductTags', reactionProductId, hashtag.trim(), null);
+  });
   ReactionCore.Log.info(prod.vendor + ' ' + prod.title + ' was successfully added to Products.');
   return reactionProductId;
 };
