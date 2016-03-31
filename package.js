@@ -20,8 +20,14 @@ Package.onUse(function (api) {
   api.addFiles('server/register.js', 'server');
 
   api.addFiles([
+    'common/schemas.js'
+  ]);
+
+  api.addFiles([
     'client/templates/dashboard/dashboard.html',
     'client/templates/dashboard/dashboard.js',
+    'client/templates/dashboard/customFields.html',
+    'client/templates/dashboard/customFields.js',
     'client/templates/settings/settings.html',
     'client/templates/settings/settings.js'
   ], 'client');

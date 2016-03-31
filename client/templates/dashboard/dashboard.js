@@ -36,7 +36,7 @@ Template.dashboardProductImporter.events({
       complete: function (results) {
         if (results && results.data) {
           Session.set('importSize', _.size(results.data));
-          Session.set('importingProducts', true)
+          Session.set('importingProducts', true);
           Meteor.call('productImporter/importProducts', results.data);
         }
       }

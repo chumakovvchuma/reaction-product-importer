@@ -18,5 +18,19 @@ Meteor.methods({
         });
       });
     });
+  },
+  'productImporter/addCustomField': function (productSelector, customField) {
+    check(productSelector, String);
+    check(customField, Object);
+    let variantLevelToBeUpdated = 'settings.customFields.' + productSelector;
+    let updateObj = {};
+    updateObj[variantLevelToBeUpdated] = customField;
+    ReactionCore.Collections.Packages.update({
+      name: 'reaction-product-importer',
+      shopId: ReactionCore.getShopId()
+    }, {
+      $addToSet: updateObj
+    });
   }
 });
+
