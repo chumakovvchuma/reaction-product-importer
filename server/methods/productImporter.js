@@ -31,6 +31,31 @@ Meteor.methods({
     }, {
       $addToSet: updateObj
     });
+  },
+  'productImport/removeCustomField': function (removingField) {
+    check(removingField, Object);
+    let data = ReactionCore.Collections.Packages.findOne({
+      name: 'reaction-product-importer',
+      shopId: ReactionCore.getShopId()
+    });
+    if (data) {
+      let customFields = data.settings.customFields;
+      _.each(customFields[removingField.level], function (field, index) {
+        let csvColumnName = field.csvColumnName === removingField.csvColumnName;
+        let productFieldName = field.productFieldName === removingField.productFieldName;
+        let valueType = field.valueType === removingField.valueType;
+        if (csvColumnName && productFieldName && valueType && index !== -1) {
+          customFields[removingField.level].splice(index, 1);
+        }
+      });
+      ReactionCore.Collections.Packages.update({_id: data._id}, {
+        $set: {
+          'settings.customFields': customFields
+        }
+      });
+    } else {
+      throw new Error('403 Cannot find package.');
+    }
   }
 });
 

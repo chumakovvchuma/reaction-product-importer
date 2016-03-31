@@ -24,7 +24,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#' class='remove' id='topProducts-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#' class='remove' data-level='topProduct' data-csv-column-name={{csvColumnName}} data-product-field-name={{productFieldName}} data-value-type={{valueType}}><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
         {{#each customMidVariant}}
@@ -33,7 +33,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#'class='remove' id='midVariants-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#' class='remove' data-level='midVariant' data-csv-column-name={{csvColumnName}} data-product-field-name={{productFieldName}} data-value-type={{valueType}}><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
         {{#each customVariant}}
@@ -42,7 +42,7 @@
             <td>{{csvColumnName}}</td>
             <td>{{productFieldName}}</td>
             <td>{{valueType}}</td>
-            <td><a href='#' class='remove' id='variants-{{csvColumnName}}-{{productFieldName}}-remove'><i class="fa fa-trash-o"></i></a></td>
+            <td><a href='#' class='remove' data-level='variant' data-csv-column-name={{csvColumnName}} data-product-field-name={{productFieldName}} data-value-type={{valueType}}><i class="fa fa-trash-o"></i></a></td>
           </tr>
         {{/each}}
       </tbody>
