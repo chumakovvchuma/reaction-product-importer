@@ -20,7 +20,20 @@ Template.dashboardProductImporter.events({
         if (results && results.data) {
           Session.set('importSize', _.size(results.data));
           Session.set('importingProducts', true);
-          Meteor.call('productImporter/importProducts', results.data);
+          Meteor.call('productImporter/importProducts', results.data, function (err, result) {
+            if (err) {
+              Alerts.removeSeen();
+              Alerts.add('Error while importing ' + err, 'danger', {
+                autoHide: true
+              });
+            } else {
+              Alerts.removeSeen();
+              Alerts.add('Products Successfully Imported', 'success', {
+                autoHide: true
+              });
+              Session.set('importingProducts', false);
+            }
+          });
         }
       }
     });
