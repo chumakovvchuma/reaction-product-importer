@@ -3,23 +3,6 @@ Template.dashboardProductImporter.onRendered(function () {
 });
 
 Template.dashboardProductImporter.helpers({
-  sampleTemplate: function () {
-    let data = [{
-      productId: '1',
-      productTitle: 'Basic Reaction Product',
-      vendor: 'Example Manufacturer',
-      handle: 'example-product',
-      variantTitle: 'Basic Example Variant',
-      title: 'Option 1 - Red Dwarf',
-      optionTitle: 'Red',
-      price: '19.99',
-      qty: '19',
-      weight: '35',
-      taxable: 'true',
-      hastags: ''
-    }];
-    return Papa.unparse(data);
-  },
   importingProducts: function () {
     return Session.get('importingProducts');
   },
@@ -37,7 +20,20 @@ Template.dashboardProductImporter.events({
         if (results && results.data) {
           Session.set('importSize', _.size(results.data));
           Session.set('importingProducts', true);
-          Meteor.call('productImporter/importProducts', results.data);
+          Meteor.call('productImporter/importProducts', results.data, function (err, result) {
+            if (err) {
+              Alerts.removeSeen();
+              Alerts.add('Error while importing ' + err, 'danger', {
+                autoHide: true
+              });
+            } else {
+              Alerts.removeSeen();
+              Alerts.add('Products Successfully Imported', 'success', {
+                autoHide: true
+              });
+              Session.set('importingProducts', false);
+            }
+          });
         }
       }
     });
@@ -46,18 +42,21 @@ Template.dashboardProductImporter.events({
     event.preventDefault();
     let data = [{
       productId: '1',
+      topProductType: 'simple',
       productTitle: 'Basic Reaction Product',
       pageTitle: 'This is a basic product. You can do a lot with it.',
       vendor: 'Example Manufacturer',
       handle: 'example-product',
       variantTitle: 'Basic Example Variant',
+      variantType: 'variant',
       title: 'Option 1 - Red Dwarf',
       optionTitle: 'Red',
       price: '19.99',
       qty: '19',
       weight: '35',
       taxable: 'true',
-      hastags: '',
+      hastags: 'Hashtags, Womens, Red',
+      metatags: 'Material=Cotten, Quality=Excellent',
       description: 'Sign in as administrator to edit.\nYou can clone this product from the product grid.'
     }];
     let unparse = Papa.unparse(data);

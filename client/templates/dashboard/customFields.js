@@ -4,6 +4,12 @@ function getProductImporterPackage() {
     shopId: ReactionCore.getShopId()
   });
 }
+
+Template.customFields.onRendered(function () {
+  Session.setDefault('ifArray', false);
+  Session.setDefault('ifObject', false);
+});
+
 Template.customFields.helpers({
   anyCustomFields: function () {
     const productImporter = getProductImporterPackage();
@@ -22,9 +28,16 @@ Template.customFields.helpers({
   customVariant: function () {
     const productImporter = getProductImporterPackage();
     return productImporter.settings.customFields.variant;
+  },
+  ifArray: function () {
+    return Session.get('ifArray');
+  },
+  ifObject: function () {
+    return Session.get('ifObject');
+  },
+  arrayOrObject: function () {
+    return Session.get('ifArray') || Session.get('ifObject');
   }
-
-
 });
 
 Template.customFields.events({
@@ -35,6 +48,11 @@ Template.customFields.events({
     customField.productFieldName = event.target.productField.value.trim();
     customField.valueType = event.target.typeSelector.value;
     const productSelector = event.target.productSelector.value;
+    if (customField.valueType === 'array' || customField.valueType === 'object') {
+      customField.options = {};
+      customField.options.delimiter = event.target.delimiterSymbol.value;
+      customField.options.typeSelector = event.target.optionTypeSelector.value;
+    }
     let columnNameWhiteSpace = customField.csvColumnName.search(/\s/g);
     let productFieldNameWhiteSpace = customField.productFieldName.search(/\s/g);
     let noWhiteSpace = columnNameWhiteSpace + productFieldNameWhiteSpace === -2;
@@ -48,5 +66,32 @@ Template.customFields.events({
     }
     event.target.columnName.value = '';
     event.target.productField.value = '';
+    Session.set('ifArray', false);
+    Session.set('ifObject', false);
+  },
+  'change form #typeSelector': function () {
+    event.preventDefault();
+    let selectedType = event.target.value;
+    if (selectedType === 'array') {
+      Session.set('ifArray', true);
+      Session.set('ifObject', false);
+    } else if (selectedType === 'object') {
+      Session.set('ifArray', false);
+      Session.set('ifObject', true);
+    } else {
+      Session.set('ifArray', false);
+      Session.set('ifObject', false);
+    }
+  },
+  'click .remove': function (event) {
+    event.preventDefault();
+    let remove = {};
+    remove.level = event.currentTarget.dataset.level;
+    remove.csvColumnName = event.currentTarget.dataset.csvColumnName;
+    remove.productFieldName = event.currentTarget.dataset.productFieldName;
+    remove.valueType = event.currentTarget.dataset.valueType;
+    if (Object.keys(remove).length === 4) {
+      Meteor.call('productImport/removeCustomField', remove);
+    }
   }
 });
