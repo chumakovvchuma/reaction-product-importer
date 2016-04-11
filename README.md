@@ -11,6 +11,8 @@ Here's an example of what basic csv import file could look like
 ### Custom Product Fields
 Product Importer supports the importing of your custom fields, you just need to help us map them out. You need to tell us what the column name is, what the field name is on your products, what type of value you are inserting and finally where to put this (top level product, grouping variant or bottom variant)
 
+![image](https://cloud.githubusercontent.com/assets/1203639/14441445/04ff190e-fff2-11e5-9fef-b4c273e44ad9.png)
+
 ### What kind of fields does Product Importer support?
 - top level - there are certain fields that only apply to top level products (topProductType, pageTitle, handle, hastags, metafields, description) these need to be on the first of each product but can be filled out for each item.
 - hashtags - each hashtag (tag) need to be separated by a ,
@@ -19,8 +21,6 @@ Product Importer supports the importing of your custom fields, you just need to 
 - Custom Objects - can be delimited by any field but key values must be separated by =
 
 _**Note:**_ Any custom field you have must be supported by your product schema or it will not import.
-
-You can easily add custom fields to extend the CSV for your store as well.
 
 Here's an example of what a more complex csv import file would look like - _custom fields have *italicized* headers_
 
@@ -38,3 +38,7 @@ Here's an example of what a more complex csv import file would look like - _cust
 | 2         | rental                     | simple         | variant     | rentalVariant           | Snowbelle           | Womens Patagonia Snowbelle                       | Patagonia | patagonia-snowbelle | Medium         | Black         | Color-Black       | 25    | 13  | 35     | TRUE    | Pants, Winter                     | included=functional pockets                          |ProductDescription | Pants         | B2         | Black                  | Womens   | 0                |
 | 2         | rental                     | simple         | variant     | rentalVariant           | Snowbelle           | Womens Patagonia Snowbelle                       | Patagonia | patagonia-snowbelle | Large          | Black         | Color-Black       | 25    | 13  | 35     | TRUE    | Pants, Winter                     | included=functional pockets                          |ProductDescription | Pants         | B2         | Black                  | Womens   | 0                |
 | 2         | rental                     | simple         | variant     | rentalVariant           | Snowbelle           | Womens Patagonia Snowbelle                       | Patagonia | patagonia-snowbelle | Extra Large    | Black         | Color-Black       | 35    | 5   | 35     | TRUE    | Pants, Winter                     | included=functional pockets                          |ProductDescription | Pants         | B2         | Black                  | Womens   | 0                |
+
+This is our _Current Custom Fields_ section looks like for the above csv example.
+
+![image](https://cloud.githubusercontent.com/assets/1203639/14441434/f2e191a2-fff1-11e5-88ba-dc6141d415e1.png)
