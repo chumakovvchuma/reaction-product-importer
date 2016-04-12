@@ -20,7 +20,8 @@ ReactionCore.registerPackage({
       container: 'getoutfitted',
       template: 'dashboardProductImporter',
       name: 'dashboardProductImporter',
-      workflow: 'coreWorkflow'
+      workflow: 'coreWorkflow',
+      priority: 2
     }, {
       provides: 'settings',
       label: 'Product Importer Settings',

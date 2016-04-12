@@ -55,7 +55,7 @@ Template.dashboardProductImporter.events({
       qty: '19',
       weight: '35',
       taxable: 'true',
-      hastags: 'Hashtags, Womens, Red',
+      hashtags: 'Hashtags, Womens, Red',
       metatags: 'Material=Cotten, Quality=Excellent',
       description: 'Sign in as administrator to edit.\nYou can clone this product from the product grid.'
     }];
