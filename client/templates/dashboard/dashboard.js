@@ -56,7 +56,7 @@ Template.dashboardProductImporter.events({
       weight: '35',
       taxable: 'true',
       hashtags: 'Hashtags, Womens, Red',
-      metatags: 'Material=Cotten, Quality=Excellent',
+      metafields: 'Material=Cotten, Quality=Excellent',
       description: 'Sign in as administrator to edit.\nYou can clone this product from the product grid.'
     }];
     let unparse = Papa.unparse(data);
