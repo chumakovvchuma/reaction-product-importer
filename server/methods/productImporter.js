@@ -33,7 +33,12 @@ Meteor.methods({
     });
   },
   'productImport/removeCustomField': function (removingField) {
-    check(removingField, Object);
+    check(removingField, {
+      level: String,
+      csvColumnName: String,
+      productFieldName: String,
+      valueType: String
+    });
     let data = ReactionCore.Collections.Packages.findOne({
       name: 'reaction-product-importer',
       shopId: ReactionCore.getShopId()
@@ -41,6 +46,7 @@ Meteor.methods({
     if (data) {
       let customFields = data.settings.customFields;
       _.each(customFields[removingField.level], function (field, index) {
+        console.log('field', field)
         let csvColumnName = field.csvColumnName === removingField.csvColumnName;
         let productFieldName = field.productFieldName === removingField.productFieldName;
         let valueType = field.valueType === removingField.valueType;

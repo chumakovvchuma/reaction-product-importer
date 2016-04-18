@@ -85,13 +85,13 @@ Template.customFields.events({
   },
   'click .remove': function (event) {
     event.preventDefault();
-    let remove = {};
-    remove.level = event.currentTarget.dataset.level;
-    remove.csvColumnName = event.currentTarget.dataset.csvColumnName;
-    remove.productFieldName = event.currentTarget.dataset.productFieldName;
-    remove.valueType = event.currentTarget.dataset.valueType;
-    if (Object.keys(remove).length === 4) {
-      Meteor.call('productImport/removeCustomField', remove);
+    let customRemoval = {};
+    customRemoval.level = event.currentTarget.dataset.level;
+    customRemoval.csvColumnName = event.currentTarget.dataset.csvColumnName;
+    customRemoval.productFieldName = event.currentTarget.dataset.productFieldName;
+    customRemoval.valueType = event.currentTarget.dataset.valueType;
+    if (Object.keys(customRemoval).length === 4) {
+      Meteor.call('productImport/removeCustomField', customRemoval);
     }
   }
 });
