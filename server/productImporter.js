@@ -133,9 +133,11 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.price.min = minPrice;
   prod.price.range = minPrice + '-' + maxPrice;
   if (baseProduct.metafields) {
-    let delimited = baseProduct.metafields.split(',');
+    let delimited = baseProduct.metafields.split('|');
     prod.metafields = [];
+    console.log('here is prod title', prod.title);
     _.each(delimited, function (objectValue) {
+      console.log('here is metafield', objectValue);
       let metafield = {};
       let keyValues = objectValue.split('=');
       let key = keyValues[0].trim();
