@@ -131,7 +131,12 @@ ProductImporter.createTopLevelProduct = function (product) {
   prod.price = {};
   prod.price.max = maxPrice;
   prod.price.min = minPrice;
-  prod.price.range = minPrice + '-' + maxPrice;
+  if (maxPrice > minPrice) {
+    prod.price.range = minPrice + ' - ' + maxPrice;
+  } else {
+    prod.price.range = minPrice;
+  }
+  
   if (baseProduct.metafields) {
     let delimited = baseProduct.metafields.split('|');
     prod.metafields = [];
@@ -239,4 +244,3 @@ ProductImporter.createVariant = function (variant, ancestors) {
   ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
   return reactionVariantId;
 };
-
