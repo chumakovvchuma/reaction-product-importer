@@ -93,7 +93,6 @@ ProductImporter.parseByType = function (value, customField) {
         })
         arrayOfObjects.push(object);
       });
-      console.log('test array?', arrayOfObjects);
       return arrayOfObjects;
     } else {
       const cleaned = _.map(arrayValues, function (arrayValue) {
