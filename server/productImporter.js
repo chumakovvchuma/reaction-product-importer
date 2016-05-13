@@ -80,10 +80,26 @@ ProductImporter.parseByType = function (value, customField) {
     return JSON.parse(value.toLowerCase());
   case 'array':
     const arrayValues = value.split(customField.options.delimiter);
-    const cleaned = _.map(arrayValues, function (arrayValue) {
-      return ProductImporter.parseBasicType(arrayValue.trim(), customField.options.typeSelector);
-    });
-    return cleaned;
+    if (customField.options.typeSelector === 'object') {
+      let arrayOfObjects = [];
+      _.each(arrayValues, function (stringObs) {
+        let object = {};
+        let arrayOfKeyValues = stringObs.split(customField.options.arrayOfObjects.delimiter);
+        _.each(arrayOfKeyValues, function (objectValue, index) {
+          let keyValues = objectValue.split('=');
+          let key = keyValues[0].trim();
+          let v = keyValues[1].trim();
+          object[key] = ProductImporter.parseBasicType(v, customField.options.arrayOfObjects[index]);
+        })
+        arrayOfObjects.push(object);
+      });
+      return arrayOfObjects;
+    } else {
+      const cleaned = _.map(arrayValues, function (arrayValue) {
+        return ProductImporter.parseBasicType(arrayValue.trim(), customField.options.typeSelector);
+      });
+      return cleaned;
+    }
   case 'object':
     const objectValues = value.split(customField.options.delimiter);
     let customObject = {};
@@ -136,7 +152,7 @@ ProductImporter.createTopLevelProduct = function (product) {
   } else {
     prod.price.range = minPrice;
   }
-  
+
   if (baseProduct.metafields) {
     let delimited = baseProduct.metafields.split('|');
     prod.metafields = [];

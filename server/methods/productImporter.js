@@ -46,7 +46,6 @@ Meteor.methods({
     if (data) {
       let customFields = data.settings.customFields;
       _.each(customFields[removingField.level], function (field, index) {
-        console.log('field', field)
         let csvColumnName = field.csvColumnName === removingField.csvColumnName;
         let productFieldName = field.productFieldName === removingField.productFieldName;
         let valueType = field.valueType === removingField.valueType;

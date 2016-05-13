@@ -53,11 +53,11 @@
     <form class='' id='customFieldsForm'>
       <div class="form-group">
         <label for="columnName">CSV Column Name</label>
-        <input required name='columnName' type="text" class="form-control" id="columnName" placeholder="Additional Column Name">
+        <input required name='columnName'  class="form-control" id="columnName" placeholder="Additional Column Name">
       </div>
       <div class="form-group">
         <label for="productField">Product Collection Field's Name</label>
-        <input required name="productField" type="text" class="form-control" id="productField" placeholder="Products Collection Field's Name">
+        <input required name="productField"  class="form-control" id="productField" placeholder="Products Collection Field's Name">
       </div>
       <div class="form-group">
         <label for='typeSelector'>Value Type</label>
@@ -72,19 +72,34 @@
       {{#if arrayOrObject}}
         <div class="form-group">
           <label for="delimiterSymbol">Delimiter Symbol</label>
-          <input required name='delimiterSymbol' type="text" class="form-control"  placeholder="Symbol that delimites (separates)values">
+          <input required name='delimiterSymbol'  class="form-control"  placeholder="Symbol that delimits (separates)values">
         </div>
         <div class="form-group">
           <label for='arrayTypeSelector'>Array/Object Value Type</label>
-          <select required name='optionTypeSelector' class="form-control">
+          <select required name='optionTypeSelector' id='optionTypeSelector' class="form-control">
             <option value='string'>String</option>
             <option value='number'>Number</option>
             <option value='boolean'>Boolean</option>
             {{#if ifArray}}
-              <!-- <option value='object'>Object</option> -->
+              <option value='object'>Object</option>
             {{/if}}
           </select>
         </div>
+        {{#if arrayOfObjects}}
+          <p>Example of a Column that has array of Objects:
+          <code>a=1 $ b=hello $ c=true | a=2 $ b=bye $ c=false</code></p>
+          <p>Where <code>|</code> is the top delimiter, <code> $</code> is the key value delimiter. And the Property Count would be 3.</p>
+          <p>Value of Property 1 would be <code>Number</code></p>
+          <div class='form-group'>
+            <label for="objectPropertiesCount">Number of Propeties in Each Object</label>
+            <input name='objectPropertiesCount' type="number" id='objectPropertiesCount' class="form-control"  placeholder="Ex {a: 1, b: 2, c: true} then enter 3!">
+          </div>
+          <div class='form-group'>
+            <label for="objectPropertiesDelimiter">Delimiter Between Each Object</label>
+            <input name='objectPropertiesDelimiter'  id='objectPropertiesDelimiter' class="form-control"  placeholder="Ex a=1 $ b=2 $ c=true  then enter $ ** This cannot be same as Array Delimiter Above">
+          </div>
+          {{{valuesOfObjects}}}
+        {{/if}}
       {{/if}}
       <div class="form-group">
         <label for='productSelector'>Product/Variant Type</label>
