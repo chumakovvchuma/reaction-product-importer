@@ -3,6 +3,13 @@ ReactionCore.registerPackage({
   name: 'reaction-product-importer',
   icon: 'fa fa-cloud-upload',
   autoEnable: false,
+  settings: {
+    customFields: {
+      topProduct: [],
+      midVariant: [],
+      variant: []
+    }
+  },
   registry: [
     {
       provides: 'dashboard',
@@ -13,7 +20,8 @@ ReactionCore.registerPackage({
       container: 'getoutfitted',
       template: 'dashboardProductImporter',
       name: 'dashboardProductImporter',
-      workflow: 'coreWorkflow'
+      workflow: 'coreWorkflow',
+      priority: 2
     }, {
       provides: 'settings',
       label: 'Product Importer Settings',
