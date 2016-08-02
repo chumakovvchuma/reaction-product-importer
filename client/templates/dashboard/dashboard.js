@@ -2,7 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
 import { _ } from 'meteor/underscore';
+// import Baby from 'babyparse'
 import './dashboard.html';
+
+// Since Papa Parse has no export - this pacakge requires meteor add harrison:papa-parse to be added to project
 
 Template.dashboardProductImporter.onRendered(function () {
   Session.setDefault('importingProducts', false);
