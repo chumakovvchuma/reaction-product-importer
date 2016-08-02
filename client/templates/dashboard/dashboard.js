@@ -1,3 +1,9 @@
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
+import { _ } from 'meteor/underscore';
+import './dashboard.html';
+
 Template.dashboardProductImporter.onRendered(function () {
   Session.setDefault('importingProducts', false);
 });
@@ -60,6 +66,7 @@ Template.dashboardProductImporter.events({
       description: 'Sign in as administrator to edit.\nYou can clone this product from the product grid.'
     }];
     let unparse = Papa.unparse(data);
+    // let unparse = Pap.unparse(data);
     let csvData = new Blob([unparse], {type: 'text/csv;charset=utf-8;'});
     let csvURL = window.URL.createObjectURL(csvData);
     let tempLink = document.createElement('a');
