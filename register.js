@@ -1,3 +1,4 @@
+import { Reaction } from '/server/api';
 ReactionCore.registerPackage({
   label: 'Import Products from CSV',
   name: 'reaction-product-importer',
@@ -20,7 +21,7 @@ ReactionCore.registerPackage({
       container: 'getoutfitted',
       template: 'dashboardProductImporter',
       name: 'dashboardProductImporter',
-      workflow: 'coreWorkflow',
+      workflow: 'productImporterWorkflow',
       priority: 2
     }, {
       provides: 'settings',
@@ -29,5 +30,32 @@ ReactionCore.registerPackage({
       name: 'settingsProductImporter',
       template: 'settingsProductImporter'
     }
-  ]
+  ],
+  layout: [{
+    workflow: 'productImporterWorkflow',
+    layout: 'coreLayout',
+    theme: 'default',
+    enabled: true,
+    structure: {
+      template: 'dashboardProductImporter',
+      layoutHeader: 'goLayoutHeader',
+      layoutFooter: 'goLayoutFooter',
+      notFound: 'goNotFound',
+      dashboardControls: 'dashboardControls',
+      adminControlsFooter: 'adminControlsFooter'
+      }
+  }, {
+    workflow: 'productImporterWorkflow',
+    layout: 'getoutfittedLayout',
+    theme: 'default',
+    enabled: true,
+    structure: {
+      template: 'dashboardProductImporter',
+      layoutHeader: 'goLayoutHeader',
+      layoutFooter: 'goLayoutFooter',
+      notFound: 'goNotFound',
+      dashboardControls: 'dashboardControls',
+      adminControlsFooter: 'adminControlsFooter'
+    }
+  }]
 });
