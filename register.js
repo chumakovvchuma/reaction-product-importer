@@ -1,5 +1,6 @@
 import { Reaction } from '/server/api';
-ReactionCore.registerPackage({
+
+Reaction.registerPackage({
   label: 'Import Products from CSV',
   name: 'reaction-product-importer',
   icon: 'fa fa-cloud-upload',
