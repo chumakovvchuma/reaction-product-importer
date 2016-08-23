@@ -23,29 +23,32 @@ Template.dashboardProductImporter.helpers({
 Template.dashboardProductImporter.events({
   'submit #import-products-csv-form': function (event) {
     event.preventDefault();
-    Papa.parse(event.target.csvImportProductsFile.files[0], {
-      header: true,
-      complete: function (results) {
-        if (results && results.data) {
-          Session.set('importSize', _.size(results.data));
-          Session.set('importingProducts', true);
-          Meteor.call('productImporter/importProducts', results.data, function (err, result) {
-            if (err) {
-              Alerts.removeSeen();
-              Alerts.add('Error while importing ' + err, 'danger', {
-                autoHide: true
-              });
-            } else {
-              Alerts.removeSeen();
-              Alerts.add('Products Successfully Imported', 'success', {
-                autoHide: true
-              });
-              Session.set('importingProducts', false);
-            }
-          });
-        }
-      }
-    });
+    if (event.target.csvImportProductsFile.files) {
+      Meteor.call('test/test', event.target.csvImportProductsFile.files[0])
+    }
+    // Papa.parse(event.target.csvImportProductsFile.files[0], {
+    //   header: true,
+    //   complete: function (results) {
+    //     if (results && results.data) {
+    //       Session.set('importSize', _.size(results.data));
+    //       Session.set('importingProducts', true);
+    //       Meteor.call('productImporter/importProducts', results.data, function (err, result) {
+    //         if (err) {
+    //           Alerts.removeSeen();
+    //           Alerts.add('Error while importing ' + err, 'danger', {
+    //             autoHide: true
+    //           });
+    //         } else {
+    //           Alerts.removeSeen();
+    //           Alerts.add('Products Successfully Imported', 'success', {
+    //             autoHide: true
+    //           });
+    //           Session.set('importingProducts', false);
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
   },
   'click .downloadSample': function (event) {
     event.preventDefault();

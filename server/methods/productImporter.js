@@ -3,10 +3,33 @@ import { check } from 'meteor/check';
 import { Packages } from '/lib/collections';
 import { Reaction } from '/server/api';
 import { _ } from 'meteor/underscore';
-
+// import { Papa } from 'meteor/harrison:papa-parse';
+import Baby from 'babyparse';
 import { ProductImporter } from '../api';
 
 Meteor.methods({
+  'test/test': function (event) {
+    check(event, Object);
+    const Papa = Baby;
+    Papa.parse(event, {
+      header: true,
+      complete: function (results) {
+        if (results && results.data) {
+          // Session.set('importSize', _.size(results.data));
+          // Session.set('importingProducts', true);
+          Meteor.call('productImporter/importProducts', results.data, function (err, result) {
+            if (err) {
+              console.log('error', err);
+            } else {
+
+              console.log('Products Successfully Imported', 'success');
+
+            }
+          });
+        }
+      }
+    });
+  },
   'productImporter/importProducts': function (productsList) {
     check(productsList, [Object]);
     //  group each Product by Product ID
