@@ -1,8 +1,15 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { Products, Packages } from '/lib/collections';
+import { Reaction, Logger } from '/server/api';
+import { _ } from 'meteor/underscore';
+
+export const ProductImporter = {};
 ProductImporter.existingProduct = function (product, type = 'variant') {
   check(product, Object);
   check(type, String);
   if (type !== 'variant') {
-    return ReactionCore.Collections.Products.findOne({
+    return Products.findOne({
       title: product.title,
       vendor: product.vendor,
       ancestors: product.ancestors,
@@ -10,7 +17,7 @@ ProductImporter.existingProduct = function (product, type = 'variant') {
       handle: product.handle
     });
   }
-  return ReactionCore.Collections.Products.findOne({
+  return Products.findOne({
     title: product.title,
     ancestors: product.ancestors,
     type: type
@@ -21,12 +28,12 @@ ProductImporter.anyCustomFields = function (level) {
   check(level, String);
   let validLevels = ['topProduct', 'midVariant', 'variant'];
   if (!_.contains(validLevels, level)) {
-    ReactionCore.Log.warn('Customized Import does not match level');
+    Logger.warn('Customized Import does not match level');
     return false;
   }
-  let productImporter = ReactionCore.Collections.Packages.findOne({
+  let productImporter = Packages.findOne({
     name: 'reaction-product-importer',
-    shopId: ReactionCore.getShopId()
+    shopId: Reaction.getShopId()
   });
   if (productImporter) {
     return productImporter.settings.customFields[level].length >= 1;
@@ -37,12 +44,12 @@ ProductImporter.customFields = function (level) {
   let validLevels = ['topProduct', 'midVariant', 'variant'];
 
   if (!_.contains(validLevels, level)) {
-    ReactionCore.Log.warn('Customized Import does not match level');
+    Logger.warn('Customized Import does not match level');
     return false;
   }
-  let productImporter = ReactionCore.Collections.Packages.findOne({
+  let productImporter = Packages.findOne({
     name: 'reaction-product-importer',
-    shopId: ReactionCore.getShopId()
+    shopId: Reaction.getShopId()
   });
   if (productImporter && productImporter.settings && productImporter.settings.customFields) {
     return productImporter.settings.customFields[level];
@@ -123,7 +130,7 @@ ProductImporter.createTopLevelProduct = function (product) {
     return result;
   });
   if (!sameProduct) {
-    ReactionCore.Log.warn('One or more Products with productId ' + baseProduct.productId + ' have different product titles');
+    Logger.warn('One or more Products with productId ' + baseProduct.productId + ' have different product titles');
   }
   let maxPricedProduct = _.max(product, function (item) {
     return parseInt(item.price, 10);
@@ -135,7 +142,7 @@ ProductImporter.createTopLevelProduct = function (product) {
   let minPrice = minPricedProduct.price;
   let prod = {};
   prod.ancestors = [];
-  prod.shopId = ReactionCore.getShopId();
+  prod.shopId = Reaction.getShopId();
   prod.title = baseProduct.productTitle;
   prod.vendor = baseProduct.vendor;
   prod.pageTitle = baseProduct.pageTitle;
@@ -175,16 +182,16 @@ ProductImporter.createTopLevelProduct = function (product) {
   }
   let existingProduct = this.existingProduct(prod, prod.type);
   if (existingProduct) {
-    ReactionCore.Log.warn('Found product = ' + existingProduct._id);
-    ReactionCore.Log.warn(existingProduct.vendor + ' ' + existingProduct.title + ' has already been added.');
+    Logger.warn('Found product = ' + existingProduct._id);
+    Logger.warn(existingProduct.vendor + ' ' + existingProduct.title + ' has already been added.');
     return existingProduct._id;
   }
-  let reactionProductId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
+  let reactionProductId = Products.insert(prod, {selector: {type: prod.type}});
   let hashtags = baseProduct.hashtags.split(',');
   _.each(hashtags, function (hashtag) {
     Meteor.call('products/updateProductTags', reactionProductId, hashtag.trim(), null);
   });
-  ReactionCore.Log.info(prod.vendor + ' ' + prod.title + ' was successfully added to Products.');
+  Logger.info(prod.vendor + ' ' + prod.title + ' was successfully added to Products.');
   return reactionProductId;
 };
 
@@ -196,7 +203,7 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
     return baseVariant.variantTitle === item.variantTitle;
   });
   if (!sameVariant) {
-    ReactionCore.Log.warn('One or more Products with variantTitle ' + baseVariant.variantTitle + ' have different variant titles');
+    Logger.warn('One or more Products with variantTitle ' + baseVariant.variantTitle + ' have different variant titles');
   }
   let inventory = _.reduce(variant, function (sum, item) {
     return sum + parseInt(item.qty, 10);
@@ -209,7 +216,7 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   prod.price = baseVariant.price;
   prod.inventoryQuantity = inventory;
   prod.weight = parseInt(baseVariant.weight, 10);
-  prod.shopId = ReactionCore.getShopId();
+  prod.shopId = Reaction.getShopId();
   prod.taxable = baseVariant.taxable.toLowerCase() === 'true';
   if (this.anyCustomFields('midVariant')) {
     let customFields = this.customFields('midVariant');
@@ -220,12 +227,12 @@ ProductImporter.createMidLevelVariant = function (variant, ancestors) {
   }
   let existingVariant = this.existingProduct(prod, prod.type);
   if (existingVariant) {
-    ReactionCore.Log.warn('Found product = ' + existingVariant._id);
-    ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
+    Logger.warn('Found product = ' + existingVariant._id);
+    Logger.warn(existingVariant.title + ' has already been added.');
     return existingVariant._id;
   }
-  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
-  ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
+  let reactionVariantId = Products.insert(prod, {selector: {type: prod.type}});
+  Logger.info(prod.title + ' was successfully added to Products as a variant.');
   return reactionVariantId;
 };
 
@@ -241,7 +248,7 @@ ProductImporter.createVariant = function (variant, ancestors) {
   prod.price = variant.price;
   prod.inventoryQuantity = parseInt(variant.qty, 10);
   prod.weight = parseInt(variant.weight, 10);
-  prod.shopId = ReactionCore.getShopId();
+  prod.shopId = Reaction.getShopId();
   prod.taxable = variant.taxable.toLowerCase() === 'true';
   if (this.anyCustomFields('variant')) {
     let customFields = this.customFields('variant');
@@ -252,11 +259,11 @@ ProductImporter.createVariant = function (variant, ancestors) {
   }
   let existingVariant = this.existingProduct(prod, prod.type);
   if (existingVariant) {
-    ReactionCore.Log.warn('Found product = ' + existingVariant._id);
-    ReactionCore.Log.warn(existingVariant.title + ' has already been added.');
+    Logger.warn('Found product = ' + existingVariant._id);
+    Logger.warn(existingVariant.title + ' has already been added.');
     return existingVariant._id;
   }
-  let reactionVariantId = ReactionCore.Collections.Products.insert(prod, {selector: {type: prod.type}});
-  ReactionCore.Log.info(prod.title + ' was successfully added to Products as a variant.');
+  let reactionVariantId = Products.insert(prod, {selector: {type: prod.type}});
+  Logger.info(prod.title + ' was successfully added to Products as a variant.');
   return reactionVariantId;
 };

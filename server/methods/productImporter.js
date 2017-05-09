@@ -1,3 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { Packages } from '/lib/collections';
+import { Reaction } from '/server/api';
+import { _ } from 'meteor/underscore';
+
+import { ProductImporter } from '../api';
+
 Meteor.methods({
   'productImporter/importProducts': function (productsList) {
     check(productsList, [Object]);
@@ -25,9 +33,9 @@ Meteor.methods({
     let variantLevelToBeUpdated = 'settings.customFields.' + productSelector;
     let updateObj = {};
     updateObj[variantLevelToBeUpdated] = customField;
-    ReactionCore.Collections.Packages.update({
+    Packages.update({
       name: 'reaction-product-importer',
-      shopId: ReactionCore.getShopId()
+      shopId: Reaction.getShopId()
     }, {
       $addToSet: updateObj
     });
@@ -39,9 +47,9 @@ Meteor.methods({
       productFieldName: String,
       valueType: String
     });
-    let data = ReactionCore.Collections.Packages.findOne({
+    let data = Packages.findOne({
       name: 'reaction-product-importer',
-      shopId: ReactionCore.getShopId()
+      shopId: Reaction.getShopId()
     });
     if (data) {
       let customFields = data.settings.customFields;
@@ -53,7 +61,7 @@ Meteor.methods({
           customFields[removingField.level].splice(index, 1);
         }
       });
-      ReactionCore.Collections.Packages.update({_id: data._id}, {
+      Packages.update({_id: data._id}, {
         $set: {
           'settings.customFields': customFields
         }

@@ -1,7 +1,15 @@
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
+import { Reaction } from '/client/api';
+import { Packages } from '/lib/collections';
+
+import './customFields.html';
+
 function getProductImporterPackage() {
-  return ReactionCore.Collections.Packages.findOne({
+  return Packages.findOne({
     name: 'reaction-product-importer',
-    shopId: ReactionCore.getShopId()
+    shopId: Reaction.getShopId()
   });
 }
 
